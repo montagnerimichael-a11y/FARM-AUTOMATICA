@@ -1,9 +1,9 @@
 -- ============================================
--- SCRIPT - MCRM HUB v3.0 (ELEMENTAL MAGIC ARENA)
--- AUTO COLETA + AUTO KILL + FLY + HITBOX
+-- SCRIPT - MCRM HUB v4.0 (ELEMENTAL MAGIC ARENA)
+-- AUTO DIAMONDS + AUTO KILL + FLY + HITBOX
 -- ============================================
 
-print("🚀 Iniciando MCRM HUB v3.0...")
+print("🚀 Iniciando MCRM HUB v4.0...")
 
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
@@ -70,7 +70,7 @@ local flyMaxSpeed = 200
 local flyBodyVelocity = nil
 local flyBodyGyro = nil
 
--- ===== LAVA =====
+-- ===== LAVA (AJUSTE AQUI!) =====
 local cargaVulcao = 0
 local cargaMaxima = 50
 local tempoCooldownVulcao = 60
@@ -183,7 +183,10 @@ function acharNPC()
             if hum and hum.Health > 0 then
                 local isPlayer = false
                 for _, p in pairs(Players:GetPlayers()) do
-                    if p.Character == obj then isPlayer = true break end
+                    if p.Character == obj then
+                        isPlayer = true
+                        break
+                    end
                 end
                 if not isPlayer then
                     local hrp = obj:FindFirstChild("HumanoidRootPart")
@@ -527,6 +530,7 @@ function alternarKill()
         if loopKill then loopKill:Disconnect() loopKill = nil end
     end
 end
+
 -- ============================================
 -- KILL LAVA
 -- ============================================
@@ -780,8 +784,9 @@ function alternarKillNPC()
         if loopKillNPC then loopKillNPC:Disconnect() loopKillNPC = nil end
     end
 end
+
 -- ============================================
--- INTERFACE NOVA - PEQUENA + ROLÁVEL + BONITA
+-- INTERFACE NOVA (PEQUENA + ROLÁVEL)
 -- ============================================
 
 local gui = Instance.new("ScreenGui")
@@ -789,7 +794,6 @@ gui.Name = "MCRMHub"
 gui.Parent = player.PlayerGui
 gui.ResetOnSpawn = false
 
--- FRAME PRINCIPAL
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 200, 0, 280)
 frame.Position = UDim2.new(0.5, -100, 0.5, -140)
@@ -804,14 +808,12 @@ local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 10)
 corner.Parent = frame
 
--- BORDA/EFEITO
 local borda = Instance.new("UIStroke")
 borda.Color = Color3.fromRGB(0, 200, 255)
 borda.Thickness = 1
 borda.Transparency = 0.5
 borda.Parent = frame
 
--- CABEÇALHO
 local header = Instance.new("Frame")
 header.Size = UDim2.new(1, 0, 0, 30)
 header.BackgroundColor3 = Color3.fromRGB(25, 25, 50)
@@ -826,14 +828,13 @@ local titulo = Instance.new("TextLabel")
 titulo.Size = UDim2.new(1, -60, 1, 0)
 titulo.Position = UDim2.new(0, 8, 0, 0)
 titulo.BackgroundTransparency = 1
-titulo.Text = "⚡ MCRM v3.0"
+titulo.Text = "⚡ MCRM v4.0"
 titulo.TextColor3 = Color3.fromRGB(0, 200, 255)
 titulo.TextSize = 12
 titulo.Font = Enum.Font.GothamBold
 titulo.TextXAlignment = Enum.TextXAlignment.Left
 titulo.Parent = header
 
--- Status Vivo
 local statusVivo = Instance.new("TextLabel")
 statusVivo.Size = UDim2.new(0, 20, 1, 0)
 statusVivo.Position = UDim2.new(1, -50, 0, 0)
@@ -843,7 +844,6 @@ statusVivo.TextSize = 12
 statusVivo.Font = Enum.Font.GothamBold
 statusVivo.Parent = header
 
--- Botão Minimizar
 local minBtn = Instance.new("TextButton")
 minBtn.Size = UDim2.new(0, 20, 0, 20)
 minBtn.Position = UDim2.new(1, -44, 0, 5)
@@ -859,7 +859,6 @@ local minC = Instance.new("UICorner")
 minC.CornerRadius = UDim.new(0, 4)
 minC.Parent = minBtn
 
--- Botão Fechar
 local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.new(0, 20, 0, 20)
 closeBtn.Position = UDim2.new(1, -22, 0, 5)
@@ -875,7 +874,6 @@ local closeC = Instance.new("UICorner")
 closeC.CornerRadius = UDim.new(0, 4)
 closeC.Parent = closeBtn
 
--- ÁREA ROLÁVEL (SCROLL)
 local scroll = Instance.new("ScrollingFrame")
 scroll.Size = UDim2.new(1, -10, 1, -40)
 scroll.Position = UDim2.new(0, 5, 0, 35)
@@ -889,7 +887,6 @@ scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
 scroll.ScrollingDirection = Enum.ScrollingDirection.Y
 scroll.Parent = frame
 
--- LISTA DE BOTÕES
 local lista = Instance.new("UIListLayout")
 lista.SortOrder = Enum.SortOrder.LayoutOrder
 lista.Padding = UDim.new(0, 4)
@@ -902,7 +899,6 @@ padding.PaddingLeft = UDim.new(0, 2)
 padding.PaddingRight = UDim.new(0, 2)
 padding.Parent = scroll
 
--- FUNÇÃO PARA CRIAR BOTÃO
 local function criarBotao(texto, cor, corAtivada, callback)
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(1, 0, 0, 28)
@@ -920,7 +916,6 @@ local function criarBotao(texto, cor, corAtivada, callback)
     return btn
 end
 
--- BOTÕES
 btnColeta = criarBotao("💎 COLETA", Color3.fromRGB(0, 150, 255), Color3.fromRGB(200, 50, 50), alternarColeta)
 btnKill = criarBotao("⚔️ KILL", Color3.fromRGB(200, 50, 50), Color3.fromRGB(50, 200, 50), alternarKill)
 btnKillLava = criarBotao("🌋 KILL LAVA", Color3.fromRGB(255, 100, 0), Color3.fromRGB(200, 100, 0), alternarKillLava)
@@ -952,7 +947,6 @@ btnHitbox = criarBotao("🎯 HITBOX: OFF", Color3.fromRGB(100, 100, 100), Color3
     end
 end)
 
--- CONTADORES
 local infoFrame = Instance.new("Frame")
 infoFrame.Size = UDim2.new(1, 0, 0, 50)
 infoFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 50)
@@ -1030,7 +1024,6 @@ killsNPCLabel.Font = Enum.Font.GothamBold
 killsNPCLabel.TextXAlignment = Enum.TextXAlignment.Right
 killsNPCLabel.Parent = infoFrame
 
--- CONTROLE DE VELOCIDADE
 local velFrame = Instance.new("Frame")
 velFrame.Size = UDim2.new(1, 0, 0, 30)
 velFrame.BackgroundColor3 = Color3.fromRGB(60, 30, 60)
@@ -1108,7 +1101,6 @@ vReset.MouseButton1Click:Connect(function()
     velLabel.Text = "🏃 16"
 end)
 
--- MINIMIZAR
 local minimizado = false
 minBtn.MouseButton1Click:Connect(function()
     minimizado = not minimizado
@@ -1123,7 +1115,6 @@ minBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- FECHAR
 closeBtn.MouseButton1Click:Connect(function()
     coletando = false
     matando = false
@@ -1164,6 +1155,6 @@ player.CharacterAdded:Connect(function(novoChar)
     if matandoNPC then matandoNPC = false btnKillNPC.Text = "🧟 NPC KILL" btnKillNPC.BackgroundColor3 = Color3.fromRGB(100, 200, 100) if loopKillNPC then loopKillNPC:Disconnect() loopKillNPC = nil end end
 end)
 
-print("✅ MCRM HUB v3.0 CARREGADO!")
+print("✅ MCRM HUB v4.0 CARREGADO!")
 print("📱 Interface pequena e rolável!")
 print("👆 Use o dedo para rolar os botões")
