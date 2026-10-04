@@ -70,7 +70,7 @@ local flyMaxSpeed = 200
 local flyBodyVelocity = nil
 local flyBodyGyro = nil
 
--- ===== LAVA (AJUSTE AQUI!) =====
+-- ===== LAVA =====
 local cargaVulcao = 0
 local cargaMaxima = 50
 local tempoCooldownVulcao = 60
@@ -113,9 +113,6 @@ function classificarObjeto(nome)
     nome = nome:lower()
     if nome:find("diamond") or nome:find("diamante") or nome:find("gem") then
         return "diamante"
-    end
-    if nome:find("soul") or nome:find("alma") then
-        return "soul"
     end
     return nil
 end
@@ -246,7 +243,7 @@ end
 local function alternarAntiAFK()
     antiAFKAtivo = not antiAFKAtivo
     if antiAFKAtivo then
-        btnAntiAFK.Text = "🛡️ ON"
+        btnAntiAFK.Text = "🛡️ ANTI-AFK: ON"
         btnAntiAFK.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
         antiAFKFunc()
         ultimoMovimento = tick()
@@ -259,7 +256,7 @@ local function alternarAntiAFK()
         end)
         print("🛡️ Anti-AFK ATIVADO!")
     else
-        btnAntiAFK.Text = "🛡️ OFF"
+        btnAntiAFK.Text = "🛡️ ANTI-AFK: OFF"
         btnAntiAFK.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
         if loopAntiAFK then loopAntiAFK:Disconnect() loopAntiAFK = nil end
         print("🛡️ Anti-AFK DESATIVADO!")
@@ -447,7 +444,7 @@ function alternarColeta()
     if not vivo() then return end
     coletando = not coletando
     if coletando then
-        btnColeta.Text = "⏹"
+        btnColeta.Text = "⏹ PARAR"
         btnColeta.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
         if loopColeta then loopColeta:Disconnect() end
         loopColeta = RunService.Heartbeat:Connect(function()
@@ -456,7 +453,7 @@ function alternarColeta()
             end
         end)
     else
-        btnColeta.Text = "💎"
+        btnColeta.Text = "💎 COLETA"
         btnColeta.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
         if loopColeta then loopColeta:Disconnect() loopColeta = nil end
     end
@@ -470,7 +467,7 @@ function loopKillFunc()
     if not matando then return end
     if not vivo() then
         matando = false
-        btnKill.Text = "⚔️"
+        btnKill.Text = "⚔️ KILL"
         btnKill.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
         if loopKill then loopKill:Disconnect() loopKill = nil end
         return
@@ -517,14 +514,14 @@ function alternarKill()
     if matando then
         espada = acharEspada()
         if not espada then matando = false return end
-        btnKill.Text = "⏹"
+        btnKill.Text = "⏹ PARAR"
         btnKill.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
         if loopKill then loopKill:Disconnect() end
         loopKill = RunService.Heartbeat:Connect(function()
             if matando then loopKillFunc() wait(0.05) end
         end)
     else
-        btnKill.Text = "⚔️"
+        btnKill.Text = "⚔️ KILL"
         btnKill.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
         alvo = nil
         if loopKill then loopKill:Disconnect() loopKill = nil end
@@ -539,7 +536,7 @@ function loopKillLavaFunc()
     if not matandoLava then return end
     if not vivo() then
         matandoLava = false
-        btnKillLava.Text = "🌋"
+        btnKillLava.Text = "🌋 KILL LAVA"
         btnKillLava.BackgroundColor3 = Color3.fromRGB(255, 100, 0)
         if loopKillLava then loopKillLava:Disconnect() loopKillLava = nil end
         return
@@ -618,7 +615,7 @@ function alternarKillLava()
     if matandoLava then
         acharEspadaLava()
         if not espadaLava then matandoLava = false return end
-        btnKillLava.Text = "⏹"
+        btnKillLava.Text = "⏹ PARAR"
         btnKillLava.BackgroundColor3 = Color3.fromRGB(200, 100, 0)
         ultimoUsoVulcao = 0
         ultimoUsoExplosao = 0
@@ -629,7 +626,7 @@ function alternarKillLava()
             if matandoLava then loopKillLavaFunc() wait(0.05) end
         end)
     else
-        btnKillLava.Text = "🌋"
+        btnKillLava.Text = "🌋 KILL LAVA"
         btnKillLava.BackgroundColor3 = Color3.fromRGB(255, 100, 0)
         alvoLava = nil
         if loopKillLava then loopKillLava:Disconnect() loopKillLava = nil end
@@ -644,7 +641,7 @@ function loopKillBossFunc()
     if not matandoBoss then return end
     if not vivo() then
         matandoBoss = false
-        btnKillBoss.Text = "👑"
+        btnKillBoss.Text = "👑 BOSS KILL"
         btnKillBoss.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
         if loopKillBoss then loopKillBoss:Disconnect() loopKillBoss = nil end
         return
@@ -698,7 +695,7 @@ function alternarKillBoss()
     if matandoBoss then
         espada = acharEspada()
         if not espada then matandoBoss = false return end
-        btnKillBoss.Text = "⏹"
+        btnKillBoss.Text = "⏹ PARAR"
         btnKillBoss.BackgroundColor3 = Color3.fromRGB(200, 150, 0)
         alvoBoss = nil
         if loopKillBoss then loopKillBoss:Disconnect() end
@@ -706,7 +703,7 @@ function alternarKillBoss()
             if matandoBoss then loopKillBossFunc() wait(0.05) end
         end)
     else
-        btnKillBoss.Text = "👑"
+        btnKillBoss.Text = "👑 BOSS KILL"
         btnKillBoss.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
         alvoBoss = nil
         if loopKillBoss then loopKillBoss:Disconnect() loopKillBoss = nil end
@@ -721,7 +718,7 @@ function loopKillNPCFunc()
     if not matandoNPC then return end
     if not vivo() then
         matandoNPC = false
-        btnKillNPC.Text = "🧟"
+        btnKillNPC.Text = "🧟 NPC KILL"
         btnKillNPC.BackgroundColor3 = Color3.fromRGB(100, 200, 100)
         if loopKillNPC then loopKillNPC:Disconnect() loopKillNPC = nil end
         return
@@ -770,7 +767,7 @@ function alternarKillNPC()
     if matandoNPC then
         espada = acharEspada()
         if not espada then matandoNPC = false return end
-        btnKillNPC.Text = "⏹"
+        btnKillNPC.Text = "⏹ PARAR"
         btnKillNPC.BackgroundColor3 = Color3.fromRGB(200, 100, 100)
         alvoNPC = nil
         if loopKillNPC then loopKillNPC:Disconnect() end
@@ -778,7 +775,7 @@ function alternarKillNPC()
             if matandoNPC then loopKillNPCFunc() wait(0.05) end
         end)
     else
-        btnKillNPC.Text = "🧟"
+        btnKillNPC.Text = "🧟 NPC KILL"
         btnKillNPC.BackgroundColor3 = Color3.fromRGB(100, 200, 100)
         alvoNPC = nil
         if loopKillNPC then loopKillNPC:Disconnect() loopKillNPC = nil end
@@ -786,7 +783,7 @@ function alternarKillNPC()
 end
 
 -- ============================================
--- INTERFACE NOVA (PEQUENA + ROLÁVEL)
+-- INTERFACE
 -- ============================================
 
 local gui = Instance.new("ScreenGui")
@@ -814,6 +811,7 @@ borda.Thickness = 1
 borda.Transparency = 0.5
 borda.Parent = frame
 
+-- CABEÇALHO
 local header = Instance.new("Frame")
 header.Size = UDim2.new(1, 0, 0, 30)
 header.BackgroundColor3 = Color3.fromRGB(25, 25, 50)
@@ -844,6 +842,7 @@ statusVivo.TextSize = 12
 statusVivo.Font = Enum.Font.GothamBold
 statusVivo.Parent = header
 
+-- MINIMIZAR
 local minBtn = Instance.new("TextButton")
 minBtn.Size = UDim2.new(0, 20, 0, 20)
 minBtn.Position = UDim2.new(1, -44, 0, 5)
@@ -859,6 +858,7 @@ local minC = Instance.new("UICorner")
 minC.CornerRadius = UDim.new(0, 4)
 minC.Parent = minBtn
 
+-- FECHAR
 local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.new(0, 20, 0, 20)
 closeBtn.Position = UDim2.new(1, -22, 0, 5)
@@ -874,6 +874,7 @@ local closeC = Instance.new("UICorner")
 closeC.CornerRadius = UDim.new(0, 4)
 closeC.Parent = closeBtn
 
+-- SCROLL
 local scroll = Instance.new("ScrollingFrame")
 scroll.Size = UDim2.new(1, -10, 1, -40)
 scroll.Position = UDim2.new(0, 5, 0, 35)
@@ -899,7 +900,7 @@ padding.PaddingLeft = UDim.new(0, 2)
 padding.PaddingRight = UDim.new(0, 2)
 padding.Parent = scroll
 
-local function criarBotao(texto, cor, corAtivada, callback)
+local function criarBotao(texto, cor, callback)
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(1, 0, 0, 28)
     btn.BackgroundColor3 = cor
@@ -916,14 +917,14 @@ local function criarBotao(texto, cor, corAtivada, callback)
     return btn
 end
 
-btnColeta = criarBotao("💎 COLETA", Color3.fromRGB(0, 150, 255), Color3.fromRGB(200, 50, 50), alternarColeta)
-btnKill = criarBotao("⚔️ KILL", Color3.fromRGB(200, 50, 50), Color3.fromRGB(50, 200, 50), alternarKill)
-btnKillLava = criarBotao("🌋 KILL LAVA", Color3.fromRGB(255, 100, 0), Color3.fromRGB(200, 100, 0), alternarKillLava)
-btnKillBoss = criarBotao("👑 BOSS KILL", Color3.fromRGB(255, 215, 0), Color3.fromRGB(200, 150, 0), alternarKillBoss)
-btnKillNPC = criarBotao("🧟 NPC KILL", Color3.fromRGB(100, 200, 100), Color3.fromRGB(200, 100, 100), alternarKillNPC)
-btnAntiAFK = criarBotao("🛡️ ANTI-AFK: OFF", Color3.fromRGB(100, 100, 100), Color3.fromRGB(0, 200, 100), alternarAntiAFK)
+btnColeta = criarBotao("💎 COLETA", Color3.fromRGB(0, 150, 255), alternarColeta)
+btnKill = criarBotao("⚔️ KILL", Color3.fromRGB(200, 50, 50), alternarKill)
+btnKillLava = criarBotao("🌋 KILL LAVA", Color3.fromRGB(255, 100, 0), alternarKillLava)
+btnKillBoss = criarBotao("👑 BOSS KILL", Color3.fromRGB(255, 215, 0), alternarKillBoss)
+btnKillNPC = criarBotao("🧟 NPC KILL", Color3.fromRGB(100, 200, 100), alternarKillNPC)
+btnAntiAFK = criarBotao("🛡️ ANTI-AFK: OFF", Color3.fromRGB(100, 100, 100), alternarAntiAFK)
 
-btnFly = criarBotao("🕊️ FLY: OFF", Color3.fromRGB(100, 100, 100), Color3.fromRGB(0, 200, 100), function()
+btnFly = criarBotao("🕊️ FLY: OFF", Color3.fromRGB(100, 100, 100), function()
     if flyAtivo then
         pararFly()
         btnFly.Text = "🕊️ FLY: OFF"
@@ -935,7 +936,7 @@ btnFly = criarBotao("🕊️ FLY: OFF", Color3.fromRGB(100, 100, 100), Color3.fr
     end
 end)
 
-btnHitbox = criarBotao("🎯 HITBOX: OFF", Color3.fromRGB(100, 100, 100), Color3.fromRGB(200, 50, 50), function()
+btnHitbox = criarBotao("🎯 HITBOX: OFF", Color3.fromRGB(100, 100, 100), function()
     if hitboxExpandido then
         desativarHitbox()
         btnHitbox.Text = "🎯 HITBOX: OFF"
@@ -947,6 +948,7 @@ btnHitbox = criarBotao("🎯 HITBOX: OFF", Color3.fromRGB(100, 100, 100), Color3
     end
 end)
 
+-- CONTADORES
 local infoFrame = Instance.new("Frame")
 infoFrame.Size = UDim2.new(1, 0, 0, 50)
 infoFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 50)
@@ -1024,6 +1026,7 @@ killsNPCLabel.Font = Enum.Font.GothamBold
 killsNPCLabel.TextXAlignment = Enum.TextXAlignment.Right
 killsNPCLabel.Parent = infoFrame
 
+-- VELOCIDADE
 local velFrame = Instance.new("Frame")
 velFrame.Size = UDim2.new(1, 0, 0, 30)
 velFrame.BackgroundColor3 = Color3.fromRGB(60, 30, 60)
@@ -1101,6 +1104,7 @@ vReset.MouseButton1Click:Connect(function()
     velLabel.Text = "🏃 16"
 end)
 
+-- MINIMIZAR
 local minimizado = false
 minBtn.MouseButton1Click:Connect(function()
     minimizado = not minimizado
@@ -1115,6 +1119,7 @@ minBtn.MouseButton1Click:Connect(function()
     end
 end)
 
+-- FECHAR
 closeBtn.MouseButton1Click:Connect(function()
     coletando = false
     matando = false
