@@ -1,34 +1,17 @@
--- 👑 MICHAEL RODRIGUES MONTAGNERI - VERSÃO SUPREMA
+-- HUB MICHAEL RODRIGUES MONTAGNERI - VERSÃO BLINDADA
 local P = game.Players.LocalPlayer
 local U = game:GetService("UserInputService")
 local R = game:GetService("RunService")
 local W = game:GetService("Workspace")
-local Camera = W.CurrentCamera
-local HttpService = game:GetService("HttpService")
 
-local c = {Esc=true, Leve=false, ESP=false, Tracer=false, Spd=false, Vel=16, Farm=false, Bet=false, Val=50, Co=2, SLO=true, SL=5, SWO=true, SW=10, Per=0, Vit=0, Hist={}, God=false, Noclip=false, Fly=false, FlySpeed=50, FlyY=0,
-Nomes={"animatronic","freddy","bonnie","chica","foxy","springtrap","puppet","ennard","baby","ballora","nightmare","golden","toy","withered","shadow","monster","enemy"},
-B={V50={"50$"}, V250={"250$"}, VT={"tudo em"}, C={"fuga"}, B={"dobro ou nada"}}}
-
-pcall(function()
-    if isfile("MichaelHub_Config.json") then
-        local data = HttpService:JSONDecode(readfile("MichaelHub_Config.json"))
-        if data then for k,v in pairs(data) do if c[k] ~= nil then c[k] = v end end end
-    end
-end)
-
-local function SalvarConfig()
-    pcall(function()
-        local saveData = {Leve=c.Leve, Vel=c.Vel, Val=c.Val, Co=c.Co, SLO=c.SLO, SL=c.SL, SWO=c.SWO, SW=c.SW}
-        writefile("MichaelHub_Config.json", HttpService:JSONEncode(saveData))
-    end)
-end
+local c = {Esc=true, Leve=false, ESP=false, Spd=false, Vel=16, Farm=false, Bet=false, Val=50, SLO=true, SL=5, SWO=true, SW=10, Per=0, Vit=0, God=false, Noclip=false, Fly=false, FlySpeed=50, FlyY=0,
+Nomes={"animatronic","freddy","bonnie","chica","foxy","springtrap","puppet","ennard","baby","ballora","nightmare","golden","toy","withered","shadow","monster","enemy"}}
 
 local Te={E={F=Color3.fromRGB(22,22,32), T=Color3.fromRGB(30,30,45), D=Color3.fromRGB(100,150,255), X=Color3.fromRGB(240,240,255), S=Color3.fromRGB(160,160,190), Bt=Color3.fromRGB(45,45,65), A=Color3.fromRGB(70,110,200), Vd=Color3.fromRGB(50,210,100), Vm=Color3.fromRGB(220,70,70), Am=Color3.fromRGB(255,200,80), Of=Color3.fromRGB(70,70,90)},
 C={F=Color3.fromRGB(245,245,252), T=Color3.fromRGB(230,230,245), D=Color3.fromRGB(60,100,220), X=Color3.fromRGB(30,30,45), S=Color3.fromRGB(100,100,130), Bt=Color3.fromRGB(215,215,232), A=Color3.fromRGB(120,160,255), Vd=Color3.fromRGB(40,170,80), Vm=Color3.fromRGB(200,60,60), Am=Color3.fromRGB(220,160,40), Of=Color3.fromRGB(190,190,210)}}
 local function TT() return c.Esc and Te.E or Te.C end
 
-local gui, pan, top, scr, bol, ch, hu, rt
+local gui, pan, top, scr, bol, ch, hu, rt, flyUI
 local lpE, lpF, lpB, lpU, lpFly
 local tg, et = {}, {}
 
@@ -42,7 +25,8 @@ local n=string.lower(m.Name)
 for _,p in ipairs(c.Nomes) do if n:find(p) then return true end end
 return m:FindFirstChild("HumanoidRootPart") ~= nil
 end
-      local function LoopUtil()
+
+local function LoopUtil()
 uC()
 if not hu or not rt then return end
 if c.God then hu.MaxHealth = math.huge; hu.Health = math.huge; hu:SetStateEnabled(Enum.HumanoidStateType.Dead, false) end
@@ -54,14 +38,12 @@ local function LoopFly()
 if not c.Fly then return end
 uC(); if not hu or not rt then return end
 hu.PlatformStand = true
-local moveDir = hu.MoveDirection
-local vel = moveDir * c.FlySpeed
-vel = vel + Vector3.new(0, c.FlyY, 0)
+local vel = hu.MoveDirection * c.FlySpeed + Vector3.new(0, c.FlyY, 0)
 rt.Velocity = vel
-if moveDir.Magnitude < 0.1 and c.FlyY == 0 then rt.Velocity = Vector3.new(0,0,0) end
+if hu.MoveDirection.Magnitude < 0.1 and c.FlyY == 0 then rt.Velocity = Vector3.new(0,0,0) end
 end
 
-local function SetUtil(v)
+local function SetUtil()
     if lpU then lpU:Disconnect() end
     lpU = R.Heartbeat:Connect(LoopUtil)
 end
@@ -71,10 +53,10 @@ local function SetFly(v)
     if v then
         if lpFly then lpFly:Disconnect() end
         lpFly = R.Heartbeat:Connect(LoopFly)
-        flyUI.Visible = true
+        if flyUI then flyUI.Visible = true end
     else
         if lpFly then lpFly:Disconnect() end
-        flyUI.Visible = false
+        if flyUI then flyUI.Visible = false end
         uC(); if hu then hu.PlatformStand = false end
     end
 end
@@ -83,7 +65,6 @@ local function lE()
     for _,d in pairs(et) do 
         if d.bb then d.bb:Destroy() end
         if d.hl then d.hl:Destroy() end
-        if d.line then pcall(function() d.line:Remove() end) end
     end 
     et={} 
 end
@@ -93,7 +74,6 @@ uC(); if not rt then return end
 for a,d in pairs(et) do if not a.Parent then 
     if d.bb then d.bb:Destroy() end
     if d.hl then d.hl:Destroy() end
-    if d.line then pcall(function() d.line:Remove() end) end
     et[a]=nil 
 end end
 
@@ -120,26 +100,10 @@ et[m]=t
 end
 end
 local d=et[m]
-if d then
+if d and d.d then
     local hp2=m:FindFirstChild("Head") or m:FindFirstChild("HumanoidRootPart")
-    if hp2 then
-        if d.d then d.d.Text=math.floor((rt.Position-hp2.Position).Magnitude).."m" end
-        if c.Tracer then
-            pcall(function()
-                if not d.line then d.line = Drawing.new("Line") end
-                local screenPos, onScreen = Camera:WorldToViewportPoint(hp2.Position)
-                if onScreen then
-                    d.line.Visible = true
-                    d.line.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
-                    d.line.To = Vector2.new(screenPos.X, screenPos.Y)
-                    d.line.Color = Color3.fromRGB(255, 50, 50)
-                    d.line.Thickness = 1.5
-                else
-                    d.line.Visible = false
-                end
-            end)
-        elseif d.line then pcall(function() d.line.Visible = false end) end
-    end
+    if hp2 then d.d.Text=math.floor((rt.Position-hp2.Position).Magnitude).."m" end
+end
 end
 end
 end
@@ -149,7 +113,7 @@ c.ESP=v
 if v then if lpE then lpE:Disconnect() end; lpE=R.Heartbeat:Connect(tE) 
 else if lpE then lpE:Disconnect() lpE=nil end; lE() end
 end
-                                 local function getHora()
+local function getHora()
 for _,g in ipairs(P.PlayerGui:GetDescendants()) do
 if g:IsA("TextLabel") and g.Text then
 local h,m = g.Text:match("^(%d%d):(%d%d)$")
@@ -242,12 +206,9 @@ if prompt then
     if acharPrompt(alvoTxt) then
         if dinheiroDepois > dinheiroAntes then
             c.Vit = c.Vit + 1; c.Per = 0
-            table.insert(c.Hist, 1, c.Co)
         else
             c.Per = c.Per + 1; c.Vit = 0
-            table.insert(c.Hist, 1, 0)
         end
-        if #c.Hist > 15 then table.remove(c.Hist) end
         task.wait(1)
     end
 else
@@ -268,40 +229,32 @@ end
 local function sLeve(v)
 c.Leve=v
 if c.ESP then sESP(false) task.wait(0.1) sESP(true) end
-if c.Farm then sFarm(false) task.wait(0.1) sFarm(true) end
-if c.Bet then sBet(false) task.wait(0.1) sBet(true) end
-for _,o in ipairs(gui:GetDescendants()) do if o:IsA("UIStroke") then o.Enabled=not v end end
 local L = game:GetService("Lighting")
-local s = settings()
 if v then
-    pcall(function() s.Rendering.QualityLevel = Enum.QualityLevel.Level01 end)
-    L.GlobalShadows = false; L.FogEnd = 100000; L.Brightness = 1
+    L.GlobalShadows = false; L.FogEnd = 100000
     for _, e in ipairs(L:GetChildren()) do if e:IsA("PostEffect") then e.Enabled = false end end
-    for _, obj in ipairs(W:GetDescendants()) do if obj:IsA("ParticleEmitter") or obj:IsA("Smoke") or obj:IsA("Fire") then pcall(function() obj.Enabled = false end) end end
 else
-    pcall(function() s.Rendering.QualityLevel = Enum.QualityLevel.Level10 end)
     L.GlobalShadows = true
     for _, e in ipairs(L:GetChildren()) do if e:IsA("PostEffect") then e.Enabled = true end end
-    for _, obj in ipairs(W:GetDescendants()) do if obj:IsA("ParticleEmitter") or obj:IsA("Smoke") or obj:IsA("Fire") then pcall(function() obj.Enabled = true end) end end
 end
-SalvarConfig()
 end
-                                                                                                                                local function tgF(par,nome,txt,y,cb)
+
+local function tgF(par,nome,txt,y,cb)
 local h=Instance.new("Frame"); h.Size=UDim2.new(1,-20,0,60); h.Position=UDim2.new(0,10,0,y); h.BackgroundTransparency=1; h.Parent=par
 local l=Instance.new("TextLabel"); l.Size=UDim2.new(1,0,0,22); l.BackgroundTransparency=1; l.Text=txt; l.TextXAlignment=Enum.TextXAlignment.Left; l.Font=Enum.Font.GothamBold; l.TextSize=13; l.TextColor3=TT().X; l.Parent=h
-local b=Instance.new("TextButton"); b.Size=UDim2.new(1,0,0,32); b.Position=UDim2.new(0,0,0,24); b.Text="✗ DESATIVADO"; b.Font=Enum.Font.GothamBold; b.TextSize=13; b.TextColor3=Color3.fromRGB(255,255,255); b.BackgroundColor3=TT().Of; b.Parent=h
+local b=Instance.new("TextButton"); b.Size=UDim2.new(1,0,0,32); b.Position=UDim2.new(0,0,0,24); b.Text="OFF"; b.Font=Enum.Font.GothamBold; b.TextSize=13; b.TextColor3=Color3.fromRGB(255,255,255); b.BackgroundColor3=TT().Of; b.Parent=h
 Instance.new("UICorner",b).CornerRadius=UDim.new(0,8)
 local e=false
-local function s(v) e=v; b.BackgroundColor3=v and TT().Vd or TT().Of; b.Text=v and "✓ ATIVADO" or "✗ DESATIVADO" end
+local function s(v) e=v; b.BackgroundColor3=v and TT().Vd or TT().Of; b.Text=v and "ON" or "OFF" end
 b.MouseButton1Click:Connect(function() s(not e); if cb then cb(e) end end)
 tg[nome]={btn=b,s=s,g=function() return e end}
 end
 
 local function tgS(par,nome,txt,x,y,cb)
-local b=Instance.new("TextButton"); b.Size=UDim2.new(0.45,0,0,30); b.Position=UDim2.new(x,y,0,0); b.Text=txt.."\n✗"; b.Font=Enum.Font.GothamBold; b.TextSize=11; b.TextColor3=Color3.fromRGB(255,255,255); b.BackgroundColor3=TT().Of; b.Parent=par
+local b=Instance.new("TextButton"); b.Size=UDim2.new(0.45,0,0,30); b.Position=UDim2.new(x,y,0,0); b.Text=txt.." OFF"; b.Font=Enum.Font.GothamBold; b.TextSize=11; b.TextColor3=Color3.fromRGB(255,255,255); b.BackgroundColor3=TT().Of; b.Parent=par
 Instance.new("UICorner",b).CornerRadius=UDim.new(0,6)
 local e=false
-local function s(v) e=v; b.BackgroundColor3=v and TT().Vd or TT().Of; b.Text=txt..(v and "\n✓" or "\n✗") end
+local function s(v) e=v; b.BackgroundColor3=v and TT().Vd or TT().Of; b.Text=txt..(v and " ON" or " OFF") end
 b.MouseButton1Click:Connect(function() s(not e); if cb then cb(e) end end)
 tg[nome]={btn=b,s=s,g=function() return e end}
 end
@@ -317,76 +270,54 @@ local b=Instance.new("TextButton"); b.Size=UDim2.new(0,26,0,26); b.Position=UDim
 Instance.new("UICorner",b).CornerRadius=UDim.new(0,5); b.MouseButton1Click:Connect(cb)
 end
 
-local function cB()
-bol=Instance.new("TextButton"); bol.Size=UDim2.new(0,65,0,65); bol.Position=UDim2.new(0,20,0,200)
-bol.BackgroundColor3=Color3.fromRGB(20,0,0); bol.Text="M"; bol.TextSize=42; bol.Font=Enum.Font.GothamBlack
-bol.TextColor3=Color3.fromRGB(255,255,255); bol.Visible=false; bol.Parent=gui
-Instance.new("UICorner",bol).CornerRadius=UDim.new(1,0)
-local stroke = Instance.new("UIStroke", bol); stroke.Color = Color3.fromRGB(255, 0, 0); stroke.Thickness = 3
-local grad = Instance.new("UIGradient", bol); grad.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 50, 50)), ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 0, 0))}); grad.Rotation = 45
-local textStroke = Instance.new("UIStroke", bol); textStroke.Color = Color3.fromRGB(255, 255, 255); textStroke.Thickness = 1; textStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Text
+gui=Instance.new("ScreenGui"); gui.Name="MichaelHub"; gui.ResetOnSpawn=false; gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling; gui.Parent=P.PlayerGui
 
-local dr,st,sp
-bol.InputBegan:Connect(function(i) if i.UserInputType==Enum.UserInputType.Touch or i.UserInputType==Enum.UserInputType.MouseButton1 then dr=true; st=i.Position; sp=bol.Position end end)
-bol.InputEnded:Connect(function(i) if i.UserInputType==Enum.UserInputType.Touch or i.UserInputType==Enum.UserInputType.MouseButton1 then if dr then dr=false; if (i.Position-st).Magnitude<10 then pan.Visible=true; bol.Visible=false end end end end)
-U.InputChanged:Connect(function(i) if dr and (i.UserInputType==Enum.UserInputType.Touch or i.UserInputType==Enum.UserInputType.MouseMovement) then local d=i.Position-st; bol.Position=UDim2.new(sp.X.Scale,sp.X.Offset+d.X,sp.Y.Scale,sp.Y.Offset+d.Y) end end)
-end
-                       local function cP()
 pan=Instance.new("Frame"); pan.Size=UDim2.new(0,280,0,400); pan.Position=UDim2.new(0.5,-140,0.5,-200); pan.BackgroundColor3=TT().F; pan.BorderSizePixel=0; pan.Parent=gui; Instance.new("UICorner",pan).CornerRadius=UDim.new(0,14)
 top=Instance.new("Frame"); top.Size=UDim2.new(1,0,0,42); top.BackgroundColor3=TT().T; top.BorderSizePixel=0; top.Parent=pan; Instance.new("UICorner",top).CornerRadius=UDim.new(0,14)
-local ti=Instance.new("TextLabel"); ti.Size=UDim2.new(1,-140,1,0); ti.Position=UDim2.new(0,12,0,0); ti.BackgroundTransparency=1; ti.Text="👑 M. Rodrigues Montagneri"; ti.TextXAlignment=Enum.TextXAlignment.Left; ti.Font=Enum.Font.GothamBold; ti.TextSize=12; ti.TextColor3=TT().X; ti.Parent=top
+local ti=Instance.new("TextLabel"); ti.Size=UDim2.new(1,-140,1,0); ti.Position=UDim2.new(0,12,0,0); ti.BackgroundTransparency=1; ti.Text="M. Rodrigues Montagneri"; ti.TextXAlignment=Enum.TextXAlignment.Left; ti.Font=Enum.Font.GothamBold; ti.TextSize=12; ti.TextColor3=TT().X; ti.Parent=top
 
 local function bT(txt,x,cor,cb)
 local b=Instance.new("TextButton"); b.Size=UDim2.new(0,28,0,28); b.Position=UDim2.new(1,x,0.5,-14); b.Text=txt; b.Font=Enum.Font.GothamBold; b.TextSize=14; b.TextColor3=Color3.fromRGB(255,255,255); b.BackgroundColor3=TT()[cor]; b.Parent=top
 Instance.new("UICorner",b).CornerRadius=UDim.new(0,6); b.MouseButton1Click:Connect(cb)
 end
-bT("✕",-36,"Vm",function() sESP(false) SetFly(false) gui:Destroy() end)
-bT("━",-70,"Bt",function() pan.Visible=false; bol.Visible=true end)
-bT("🌙",-104,"Am",function() c.Esc=not c.Esc; pan.BackgroundColor3=TT().F; top.BackgroundColor3=TT().T; ti.TextColor3=TT().X end)
+bT("X",-36,"Vm",function() sESP(false) SetFly(false) gui:Destroy() end)
+bT("-",-70,"Bt",function() pan.Visible=false; bol.Visible=true end)
+bT("T",-104,"Am",function() c.Esc=not c.Esc; pan.BackgroundColor3=TT().F; top.BackgroundColor3=TT().T; ti.TextColor3=TT().X end)
 
-scr=Instance.new("ScrollingFrame"); scr.Size=UDim2.new(1,-12,1,-52); scr.Position=UDim2.new(0,6,0,46); scr.BackgroundTransparency=1; scr.BorderSizePixel=0; scr.ScrollBarThickness=4; scr.CanvasSize=UDim2.new(0,0,0,950); scr.Parent=pan
+scr=Instance.new("ScrollingFrame"); scr.Size=UDim2.new(1,-12,1,-52); scr.Position=UDim2.new(0,6,0,46); scr.BackgroundTransparency=1; scr.BorderSizePixel=0; scr.ScrollBarThickness=4; scr.CanvasSize=UDim2.new(0,0,0,780); scr.Parent=pan
 
-local s1=secP(scr,"🛠️ UTILIDADES",5,110)
-tgS(s1,"Leve","🪶 Leve",0.03,26,sLeve)
-tgS(s1,"God","🛡️ God",0.52,26,function(v) c.God=v; if v then SetUtil(true) end end)
-tgS(s1,"Noclip","👻 Noclip",0.03,60,function(v) c.Noclip=v; if v then SetUtil(true) end end)
-tgS(s1,"Fly","✈️ Fly",0.52,60,SetFly)
+local s1=secP(scr,"UTILIDADES",5,110)
+tgS(s1,"Leve","Leve",0.03,26,sLeve)
+tgS(s1,"God","God",0.52,26,function(v) c.God=v; SetUtil() end)
+tgS(s1,"Noclip","Noclip",0.03,60,function(v) c.Noclip=v; SetUtil() end)
+tgS(s1,"Fly","Fly",0.52,60,SetFly)
 
-local s2=secP(scr,"👁️ VISUAL",125,110)
+local s2=secP(scr,"VISUAL",125,76)
 tgF(s2,"ESP","Ativar ESP",26,sESP)
-local tgTracer = Instance.new("TextButton"); tgTracer.Size=UDim2.new(0.45,0,0,24); tgTracer.Position=UDim2.new(0.52,0,0,98); tgTracer.Text="🔴 Tracers ✗"; tgTracer.Font=Enum.Font.GothamBold; tgTracer.TextSize=11; tgTracer.TextColor3=Color3.fromRGB(255,255,255); tgTracer.BackgroundColor3=TT().Of; tgTracer.Parent=s2
-Instance.new("UICorner",tgTracer).CornerRadius=UDim.new(0,5)
-local trOn = false
-tgTracer.MouseButton1Click:Connect(function()
-    trOn = not trOn; c.Tracer = trOn
-    tgTracer.BackgroundColor3 = trOn and TT().Vd or TT().Of
-    tgTracer.Text = trOn and "🔴 Tracers ✓" or "🔴 Tracers ✗"
-    if not c.ESP then sESP(true); tg.ESP.s(true) end
-end)
 
-local s3=secP(scr,"⚡ SPEED",245,130); tgF(s3,"Speed","Velocidade",26,function(v) c.Spd=v; if v then SetUtil(true) else uC(); if hu then hu.WalkSpeed=16 end end end)
+local s3=secP(scr,"SPEED",210,130); tgF(s3,"Speed","Velocidade",26,function(v) c.Spd=v; SetUtil() end)
 local lv=Instance.new("TextLabel"); lv.Size=UDim2.new(0,60,0,26); lv.Position=UDim2.new(0,8,0,96); lv.BackgroundTransparency=1; lv.Text=tostring(c.Vel); lv.Font=Enum.Font.GothamBold; lv.TextSize=14; lv.TextColor3=TT().X; lv.Parent=s3
-mB(s3,"−",70,95,function() c.Vel=math.max(16,c.Vel-10); lv.Text=c.Vel; SalvarConfig() end)
-mB(s3,"+",102,95,function() c.Vel=math.min(200,c.Vel+10); lv.Text=c.Vel; SalvarConfig() end)
-                                          local s4=secP(scr,"🌾 FARM",385,76); tgF(s4,"Farm","Fugir + Porta 6AM",26,sFarm)
+mB(s3,"-",70,95,function() c.Vel=math.max(16,c.Vel-10); lv.Text=c.Vel end)
+mB(s3,"+",102,95,function() c.Vel=math.min(200,c.Vel+10); lv.Text=c.Vel end)
 
-local s5=secP(scr,"🎰 APOSTAS",470,380); tgF(s5,"Bet","Auto Play (Lê Dinheiro)",26,sBet)
+local s4=secP(scr,"FARM",350,76); tgF(s4,"Farm","Fugir + Porta 6AM",26,sFarm)
+local s5=secP(scr,"APOSTAS",435,320); tgF(s5,"Bet","Auto Play",26,sBet)
 
-local lv2=Instance.new("TextLabel"); lv2.Size=UDim2.new(1,-16,0,18); lv2.Position=UDim2.new(0,8,0,96); lv2.BackgroundTransparency=1; lv2.Text="💰 VALOR"; lv2.TextXAlignment=Enum.TextXAlignment.Left; lv2.Font=Enum.Font.GothamBold; lv2.TextSize=11; lv2.TextColor3=TT().S; lv2.Parent=s5
+local lv2=Instance.new("TextLabel"); lv2.Size=UDim2.new(1,-16,0,18); lv2.Position=UDim2.new(0,8,0,96); lv2.BackgroundTransparency=1; lv2.Text="VALOR"; lv2.TextXAlignment=Enum.TextXAlignment.Left; lv2.Font=Enum.Font.GothamBold; lv2.TextSize=11; lv2.TextColor3=TT().S; lv2.Parent=s5
 local bV={}
 local function sV(v) c.Val=v; for k,b in pairs(bV) do b.BackgroundColor3=(k==v) and TT().A or TT().Bt end end
 local function bVF(txt,x,v) local b=Instance.new("TextButton"); b.Size=UDim2.new(0,88,0,30); b.Position=UDim2.new(0,x,0,118); b.Text=txt; b.Font=Enum.Font.GothamBold; b.TextSize=12; b.TextColor3=Color3.fromRGB(255,255,255); b.BackgroundColor3=TT().Bt; b.Parent=s5; Instance.new("UICorner",b).CornerRadius=UDim.new(0,6); b.MouseButton1Click:Connect(function() sV(v) end); bV[v]=b end
-bVF("💵 50",8,50); bVF("💎 250",100,250); bVF("🔥 TUDO",192,0); sV(c.Val)
+bVF("50$",8,50); bVF("250$",100,250); bVF("TUDO",192,0); sV(c.Val)
 
 local slF=Instance.new("Frame"); slF.Size=UDim2.new(1,-16,0,60); slF.Position=UDim2.new(0,8,0,214); slF.BackgroundTransparency=1; slF.Parent=s5
-tgF(slF,"SL","🛑 Stop Loss",0,function(v) c.SLO=v end)
-mB(s5,"−",8,292,function() c.SL=math.max(1,c.SL-1) end); mB(s5,"+",40,292,function() c.SL=c.SL+1 end)
+tgF(slF,"SL","Stop Loss",0,function(v) c.SLO=v end)
+mB(s5,"-",8,292,function() c.SL=math.max(1,c.SL-1) end); mB(s5,"+",40,292,function() c.SL=c.SL+1 end)
 
 local swF=Instance.new("Frame"); swF.Size=UDim2.new(1,-16,0,60); swF.Position=UDim2.new(0,8,0,308); swF.BackgroundTransparency=1; swF.Parent=s5
-tgF(swF,"SW","🎯 Stop Win",0,function(v) c.SWO=v end)
-mB(s5,"−",152,386,function() c.SW=math.max(1,c.SW-1) end); mB(s5,"+",184,386,function() c.SW=c.SW+1 end)
+tgF(swF,"SW","Stop Win",0,function(v) c.SWO=v end)
+mB(s5,"-",152,386,function() c.SW=math.max(1,c.SW-1) end); mB(s5,"+",184,386,function() c.SW=c.SW+1 end)
 
-local bD=Instance.new("TextButton"); bD.Size=UDim2.new(1,-40,0,35); bD.Position=UDim2.new(0,20,0,860); bD.Text="🔴 DESATIVAR TUDO"; bD.Font=Enum.Font.GothamBold; bD.TextSize=13; bD.TextColor3=Color3.fromRGB(255,255,255); bD.BackgroundColor3=TT().Vm; bD.Parent=scr; Instance.new("UICorner",bD).CornerRadius=UDim.new(0,8)
+local bD=Instance.new("TextButton"); bD.Size=UDim2.new(1,-40,0,35); bD.Position=UDim2.new(0,20,0,765); bD.Text="DESATIVAR TUDO"; bD.Font=Enum.Font.GothamBold; bD.TextSize=13; bD.TextColor3=Color3.fromRGB(255,255,255); bD.BackgroundColor3=TT().Vm; bD.Parent=scr; Instance.new("UICorner",bD).CornerRadius=UDim.new(0,8)
 bD.MouseButton1Click:Connect(function()
 sESP(false) sFarm(false) sBet(false) SetFly(false)
 c.Spd=false; c.God=false; c.Noclip=false; c.Leve=false
@@ -399,30 +330,21 @@ local dr,st,sp
 top.InputBegan:Connect(function(i) if i.UserInputType==Enum.UserInputType.Touch or i.UserInputType==Enum.UserInputType.MouseButton1 then dr=true; st=i.Position; sp=pan.Position end end)
 top.InputEnded:Connect(function(i) if i.UserInputType==Enum.UserInputType.Touch or i.UserInputType==Enum.UserInputType.MouseButton1 then dr=false end end)
 U.InputChanged:Connect(function(i) if dr and (i.UserInputType==Enum.UserInputType.Touch or i.UserInputType==Enum.UserInputType.MouseMovement) then local d=i.Position-st; pan.Position=UDim2.new(sp.X.Scale,sp.X.Offset+d.X,sp.Y.Scale,sp.Y.Offset+d.Y) end end)
-end
 
-local flyUI = Instance.new("Frame")
-flyUI.Size = UDim2.new(0, 60, 0, 120); flyUI.Position = UDim2.new(0.1, 0, 0.4, 0)
-flyUI.BackgroundTransparency = 1; flyUI.Visible = false; flyUI.Parent = gui
+bol=Instance.new("TextButton"); bol.Size=UDim2.new(0,65,0,65); bol.Position=UDim2.new(0,20,0,200); bol.BackgroundColor3=Color3.fromRGB(20,0,0); bol.Text="M"; bol.TextSize=42; bol.Font=Enum.Font.GothamBlack; bol.TextColor3=Color3.fromRGB(255,255,255); bol.Visible=false; bol.Parent=gui
+Instance.new("UICorner",bol).CornerRadius=UDim.new(1,0)
+local stroke = Instance.new("UIStroke", bol); stroke.Color = Color3.fromRGB(255, 0, 0); stroke.Thickness = 3
+local grad = Instance.new("UIGradient", bol); grad.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 50, 50)), ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 0, 0))}); grad.Rotation = 45
 
-local upBtn = Instance.new("TextButton"); upBtn.Size = UDim2.new(1, 0, 0, 55); upBtn.Text = "⬆️"; upBtn.Font = Enum.Font.GothamBold; upBtn.TextSize = 24; upBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50); upBtn.TextColor3 = Color3.fromRGB(255,255,255); upBtn.Parent = flyUI
-Instance.new("UICorner", upBtn).CornerRadius = UDim.new(0, 8)
+local drB,stB,spB
+bol.InputBegan:Connect(function(i) if i.UserInputType==Enum.UserInputType.Touch or i.UserInputType==Enum.UserInputType.MouseButton1 then drB=true; stB=i.Position; spB=bol.Position end end)
+bol.InputEnded:Connect(function(i) if i.UserInputType==Enum.UserInputType.Touch or i.UserInputType==Enum.UserInputType.MouseButton1 then if drB then drB=false; if (i.Position-stB).Magnitude<10 then pan.Visible=true; bol.Visible=false end end end end)
+U.InputChanged:Connect(function(i) if drB and (i.UserInputType==Enum.UserInputType.Touch or i.UserInputType==Enum.UserInputType.MouseMovement) then local d=i.Position-stB; bol.Position=UDim2.new(spB.X.Scale,spB.X.Offset+d.X,spB.Y.Scale,spB.Y.Offset+d.Y) end end)
 
-local downBtn = Instance.new("TextButton"); downBtn.Size = UDim2.new(1, 0, 0, 55); downBtn.Position = UDim2.new(0, 0, 0, 65); downBtn.Text = "⬇️"; downBtn.Font = Enum.Font.GothamBold; downBtn.TextSize = 24; downBtn.BackgroundColor3 = Color3.fromRGB(150, 50, 50); downBtn.TextColor3 = Color3.fromRGB(255,255,255); downBtn.Parent = flyUI
-Instance.new("UICorner", downBtn).CornerRadius = UDim.new(0, 8)
+flyUI = Instance.new("Frame"); flyUI.Size = UDim2.new(0, 60, 0, 120); flyUI.Position = UDim2.new(0.1, 0, 0.4, 0); flyUI.BackgroundTransparency = 1; flyUI.Visible = false; flyUI.Parent = gui
+local upBtn = Instance.new("TextButton"); upBtn.Size = UDim2.new(1, 0, 0, 55); upBtn.Text = "UP"; upBtn.Font = Enum.Font.GothamBold; upBtn.TextSize = 20; upBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 50); upBtn.TextColor3 = Color3.fromRGB(255,255,255); upBtn.Parent = flyUI; Instance.new("UICorner", upBtn).CornerRadius = UDim.new(0, 8)
+local downBtn = Instance.new("TextButton"); downBtn.Size = UDim2.new(1, 0, 0, 55); downBtn.Position = UDim2.new(0, 0, 0, 65); downBtn.Text = "DOWN"; downBtn.Font = Enum.Font.GothamBold; downBtn.TextSize = 20; downBtn.BackgroundColor3 = Color3.fromRGB(150, 50, 50); downBtn.TextColor3 = Color3.fromRGB(255,255,255); downBtn.Parent = flyUI; Instance.new("UICorner", downBtn).CornerRadius = UDim.new(0, 8)
+upBtn.MouseButton1Down:Connect(function() c.FlyY = c.FlySpeed end); upBtn.MouseButton1Up:Connect(function() c.FlyY = 0 end)
+downBtn.MouseButton1Down:Connect(function() c.FlyY = -c.FlySpeed end); downBtn.MouseButton1Up:Connect(function() c.FlyY = 0 end)
 
-upBtn.MouseButton1Down:Connect(function() c.FlyY = c.FlySpeed end)
-upBtn.MouseButton1Up:Connect(function() c.FlyY = 0 end)
-downBtn.MouseButton1Down:Connect(function() c.FlyY = -c.FlySpeed end)
-downBtn.MouseButton1Up:Connect(function() c.FlyY = 0 end)
-
-gui=Instance.new("ScreenGui"); gui.Name="MichaelHub"; gui.ResetOnSpawn=false; gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling; gui.Parent=P.PlayerGui
-cP(); cB()
-
-uC()
-if c.Spd then tg.Speed.s(true); SetUtil(true) end
-if c.Leve then tg.Leve.s(true); sLeve(true) end
-if c.God then tg.God.s(true); SetUtil(true) end
-
-print("👑 MICHAEL RODRIGUES MONTAGNERI - VERSÃO SUPREMA CARREGADA!")
-                                                                                                                              
+print("HUB CARREGADO COM SUCESSO!")
