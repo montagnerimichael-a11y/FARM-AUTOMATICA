@@ -1,0 +1,241 @@
+-- 👑 MICHAEL RODRIGUES MONTAGNERI
+local P=game.Players.LocalPlayer
+local U=game:GetService("UserInputService")
+local R=game:GetService("RunService")
+local W=game:GetService("Workspace")
+
+local c={Esc=true,Leve=false,ESP=false,Spd=false,Vel=16,Farm=false,Bet=false,Val=50,Co=2,SLO=true,SL=5,SWO=true,SW=10,Per=0,Vit=0,Hist={},
+Nomes={"animatronic","freddy","bonnie","chica","foxy","springtrap","puppet","ennard","baby","ballora","nightmare","golden","toy","withered","shadow","monster","enemy"},
+B={V50={"50"},V250={"250"},VT={"tudo","all in","max"},C={"cashout","sacar","withdraw"},B={"apostar","bet"}}}
+
+local Te={E={F=Color3.fromRGB(22,22,32),T=Color3.fromRGB(30,30,45),D=Color3.fromRGB(100,150,255),X=Color3.fromRGB(240,240,255),S=Color3.fromRGB(160,160,190),Bt=Color3.fromRGB(45,45,65),A=Color3.fromRGB(70,110,200),Vd=Color3.fromRGB(50,210,100),Vm=Color3.fromRGB(220,70,70),Am=Color3.fromRGB(255,200,80),Of=Color3.fromRGB(70,70,90)},
+C={F=Color3.fromRGB(245,245,252),T=Color3.fromRGB(230,230,245),D=Color3.fromRGB(60,100,220),X=Color3.fromRGB(30,30,45),S=Color3.fromRGB(100,100,130),Bt=Color3.fromRGB(215,215,232),A=Color3.fromRGB(120,160,255),Vd=Color3.fromRGB(40,170,80),Vm=Color3.fromRGB(200,60,60),Am=Color3.fromRGB(220,160,40),Of=Color3.fromRGB(190,190,210)}}
+local function TT()return c.Esc and Te.E or Te.C end
+
+local gui,pan,top,scr,bol,ch,hu,rt
+local lpE,lpF,lpB
+local tg={}
+local et={}
+
+local function uC()ch=P.Character;hu=ch and ch:FindFirstChildOfClass("Humanoid");rt=ch and ch:FindFirstChild("HumanoidRootPart")end
+
+local function iA(m)
+if not m or not m:IsA("Model")or m==P.Character then return false end
+if game.Players:GetPlayerFromCharacter(m)then return false end
+if not m:FindFirstChildOfClass("Humanoid")then return false end
+local n=string.lower(m.Name)
+for _,p in ipairs(c.Nomes)do if n:find(p)then return true end end
+return m:FindFirstChild("HumanoidRootPart")~=nil
+end
+local function lE()
+for _,d in pairs(et)do if d.bb then d.bb:Destroy()end;if d.hl then d.hl:Destroy()end end
+et={}
+end
+
+local function tE()
+uC();if not rt then return end
+for a,d in pairs(et)do if not a.Parent then if d.bb then d.bb:Destroy()end;if d.hl then d.hl:Destroy()end;et[a]=nil end end
+for _,m in ipairs(W:GetDescendants())do
+if iA(m)then
+if not et[m]then
+local hp=m:FindFirstChild("Head")or m:FindFirstChild("HumanoidRootPart")
+if hp then
+local bb=Instance.new("BillboardGui");bb.AlwaysOnTop=true;bb.StudsOffset=Vector3.new(0,2.5,0)
+bb.Size=c.Leve and UDim2.new(0,140,0,22)or UDim2.new(0,180,0,45);bb.Parent=hp
+local nm=Instance.new("TextLabel");nm.BackgroundTransparency=1
+nm.Size=c.Leve and UDim2.new(1,0,1,0)or UDim2.new(1,0,0.6,0)
+nm.TextColor3=Color3.fromRGB(255,80,80);nm.TextStrokeTransparency=0;nm.Font=Enum.Font.GothamBold
+nm.TextSize=c.Leve and 13 or 16;nm.Text=m.Name;nm.Parent=bb
+local t={bb=bb}
+if not c.Leve then
+local ds=Instance.new("TextLabel");ds.Size=UDim2.new(1,0,0.4,0);ds.Position=UDim2.new(0,0,0.6,0)
+ds.BackgroundTransparency=1;ds.TextColor3=Color3.fromRGB(255,220,80);ds.TextStrokeTransparency=0
+ds.Font=Enum.Font.GothamBold;ds.TextSize=13;ds.Text="0m";ds.Parent=bb;t.d=ds
+local hl=Instance.new("Highlight");hl.FillColor=Color3.fromRGB(255,60,60);hl.FillTransparency=0.55
+hl.OutlineColor=Color3.fromRGB(255,60,60);hl.Parent=m;t.hl=hl
+end
+et[m]=t
+end
+end
+local d=et[m]
+if d and d.d then local hp=m:FindFirstChild("Head")or m:FindFirstChild("HumanoidRootPart")
+if hp then d.d.Text=math.floor((rt.Position-hp.Position).Magnitude).."m" end end
+end
+end
+end
+
+local function sESP(v)c.ESP=v;if v then if lpE then lpE:Disconnect()end;lpE=R.Heartbeat:Connect(tE)else if lpE then lpE:Disconnect()lpE=nil end;lE()end end
+local function aSpd()uC();if hu then hu.WalkSpeed=c.Vel end end
+local function sSpd(v)c.Spd=v;if v then aSpd()else uC();if hu then hu.WalkSpeed=16 end end end
+
+local function iS()for _,g in ipairs(P.PlayerGui:GetDescendants())do if g:IsA("TextLabel")and g.Text then if g.Text:match("6:00")or g.Text:match("06:00")or g.Text:lower():match("seis")then return true end end end;return false end
+
+local function aP()
+uC();if not rt then return nil end
+local m,me=nil,math.huge
+for _,o in ipairs(W:GetDescendants())do if o:IsA("ProximityPrompt")then local p=o.Parent
+if p and p:IsA("BasePart")then local n=string.lower(p.Name.." "..(o.ActionText or""))
+if n:find("exit")or n:find("porta")or n:find("door")or n:find("sair")then
+local d=(rt.Position-p.Position).Magnitude;if d<me then me=d;m={part=p,prompt=o}end end end end end
+return m
+end
+
+local function tF()
+uC();if not hu or not rt then return end
+if iS()then local p=aP();if p then hu:MoveTo(p.part.Position)
+if(rt.Position-p.part.Position).Magnitude<8 then p.prompt:InputHoldBegin()task.wait(0.1)p.prompt:InputHoldEnd()end end;return end
+local a,d=nil,math.huge
+for _,m in ipairs(W:GetDescendants())do if iA(m)then local r=m:FindFirstChild("HumanoidRootPart")
+if r then local dd=(rt.Position-r.Position).Magnitude;if dd<d then d=dd;a=m end end end end
+if a and d<30 then local ar=a:FindFirstChild("HumanoidRootPart")
+if ar then local dr=(rt.Position-ar.Position);if dr.Magnitude>0.1 then dr=dr.Unit else dr=Vector3.new(1,0,0)end
+hu:MoveTo(rt.Position+dr*35)end end
+local function aBt(pal)for _,g in ipairs(P.PlayerGui:GetDescendants())do if g:IsA("TextButton")then local t=string.lower(g.Text or"")
+for _,p in ipairs(pal)do if t:find(string.lower(p))then return g end end end end;return nil end
+local function cl(pal)local b=aBt(pal);if b then pcall(function()b:Activate()end)return true end;return false end
+
+local function dM()for _,g in ipairs(P.PlayerGui:GetDescendants())do if g:IsA("TextLabel")and g.Text then local n=g.Text:match("(%d+%.?%d*)x")or g.Text:match("x(%d+%.?%d*)");if n then return tonumber(n)end end end;return nil end
+
+local function tB()
+if not c.Bet then return end
+if c.SLO and c.Per>=c.SL then c.Bet=false;if tg.Bet then tg.Bet.s(false)end;return end
+if c.SWO and c.Vit>=c.SW then c.Bet=false;if tg.Bet then tg.Bet.s(false)end;return end
+local m=dM()
+if not m then
+if c.Val==50 then cl(c.B.V50)elseif c.Val==250 then cl(c.B.V250)else cl(c.B.VT)end
+task.wait(0.5);return end
+if m>=c.Co then if cl(c.B.C)then if m>0 then c.Vit=c.Vit+1;c.Per=0;table.insert(c.Hist,1,m);if#c.Hist>15 then table.remove(c.Hist)end end;task.wait(1)end
+elseif m==0 then c.Per=c.Per+1;c.Vit=0;table.insert(c.Hist,1,0);if#c.Hist>15 then table.remove(c.Hist)end;task.wait(1)end end
+
+local function sBet(v)c.Bet=v
+if v then if lpB then if typeof(lpB)=="RBXScriptConnection"then lpB:Disconnect()else task.cancel(lpB)end end
+if c.Leve then lpB=task.spawn(function()while c.Bet do tB()task.wait(0.3)end end)
+else lpB=R.Heartbeat:Connect(tB)end
+else if lpB then if typeof(lpB)=="RBXScriptConnection"then lpB:Disconnect()else task.cancel(lpB)end;lpB=nil end end end
+
+local function sLeve(v)c.Leve=v
+if c.ESP then sESP(false)task.wait(0.1)sESP(true)end
+if c.Farm then sFarm(false)task.wait(0.1)sFarm(true)end
+if c.Bet then sBet(false)task.wait(0.1)sBet(true)end
+for _,o in ipairs(gui:GetDescendants())do if o:IsA("UIStroke")then o.Enabled=not v end end end
+end
+
+local function sFarm(v)c.Farm=v
+if v then if lpF then if typeof(lpF)=="RBXScriptConnection"then lpF:Disconnect()else task.cancel(lpF)end end
+if c.Leve then lpF=task.spawn(function()while c.Farm do tF()task.wait(0.2)end end)
+else lpF=R.Heartbeat:Connect(tF)end
+else if lpF then if typeof(lpF)=="RBXScriptConnection"then lpF:Disconnect()else task.cancel(lpF)end;lpF=nil end
+uC();if hu and rt then hu:MoveTo(rt.Position)end end end
+local function tgF(par,nome,txt,y,cb)
+local h=Instance.new("Frame");h.Size=UDim2.new(1,-20,0,60);h.Position=UDim2.new(0,10,0,y);h.BackgroundTransparency=1;h.Parent=par
+local l=Instance.new("TextLabel");l.Size=UDim2.new(1,0,0,22);l.BackgroundTransparency=1;l.Text=txt;l.TextXAlignment=Enum.TextXAlignment.Left
+l.Font=Enum.Font.GothamBold;l.TextSize=13;l.TextColor3=TT().X;l.Parent=h
+local b=Instance.new("TextButton");b.Size=UDim2.new(1,0,0,32);b.Position=UDim2.new(0,0,0,24);b.Text="✗ DESATIVADO"
+b.Font=Enum.Font.GothamBold;b.TextSize=13;b.TextColor3=Color3.fromRGB(255,255,255);b.BackgroundColor3=TT().Of;b.Parent=h
+Instance.new("UICorner",b).CornerRadius=UDim.new(0,8)
+local e=false
+local function s(v)e=v;b.BackgroundColor3=v and TT().Vd or TT().Of;b.Text=v and"✓ ATIVADO"or"✗ DESATIVADO"end
+b.MouseButton1Click:Connect(function()s(not e);if cb then cb(e)end end)
+tg[nome]={btn=b,s=s,g=function()return e end}
+end
+
+local function secP(par,tit,y,h)
+local f=Instance.new("Frame");f.Size=UDim2.new(1,-16,0,h);f.Position=UDim2.new(0,8,0,y);f.BackgroundColor3=TT().F
+f.BackgroundTransparency=0.5;f.BorderSizePixel=0;f.Parent=par;Instance.new("UICorner",f).CornerRadius=UDim.new(0,10)
+local t=Instance.new("TextLabel");t.Size=UDim2.new(1,-16,0,22);t.Position=UDim2.new(0,8,0,6);t.BackgroundTransparency=1
+t.Text=tit;t.TextXAlignment=Enum.TextXAlignment.Left;t.Font=Enum.Font.GothamBold;t.TextSize=13;t.TextColor3=TT().D;t.Parent=f
+return f end
+
+local function mB(par,txt,x,y,cb)
+local b=Instance.new("TextButton");b.Size=UDim2.new(0,26,0,26);b.Position=UDim2.new(0,x,0,y);b.Text=txt
+b.Font=Enum.Font.GothamBold;b.TextSize=13;b.TextColor3=Color3.fromRGB(255,255,255);b.BackgroundColor3=TT().Bt;b.Parent=par
+Instance.new("UICorner",b).CornerRadius=UDim.new(0,5);b.MouseButton1Click:Connect(cb)end
+
+local function cB()
+bol=Instance.new("TextButton");bol.Size=UDim2.new(0,60,0,60);bol.Position=UDim2.new(0,20,0,200)
+bol.BackgroundColor3=TT().D;bol.Text="👑";bol.TextSize=26;bol.Font=Enum.Font.GothamBold;bol.TextColor3=Color3.fromRGB(255,255,255)
+bol.Visible=false;bol.Parent=gui;Instance.new("UICorner",bol).CornerRadius=UDim.new(1,0)
+local dr,st,sp
+bol.InputBegan:Connect(function(i)if i.UserInputType==Enum.UserInputType.Touch or i.UserInputType==Enum.UserInputType.MouseButton1 then dr=true;st=i.Position;sp=bol.Position end end)
+bol.InputEnded:Connect(function(i)if i.UserInputType==Enum.UserInputType.Touch or i.UserInputType==Enum.UserInputType.MouseButton1 then
+if dr then dr=false;if(i.Position-st).Magnitude<10 then pan.Visible=true;bol.Visible=false end end end end)
+U.InputChanged:Connect(function(i)if dr and(i.UserInputType==Enum.UserInputType.Touch or i.UserInputType==Enum.UserInputType.MouseMovement)then
+local d=i.Position-st;bol.Position=UDim2.new(sp.X.Scale,sp.X.Offset+d.X,sp.Y.Scale,sp.Y.Offset+d.Y)end end)
+end
+local function cP()
+pan=Instance.new("Frame");pan.Size=UDim2.new(0,300,0,420);pan.Position=UDim2.new(0.5,-150,0.5,-210)
+pan.BackgroundColor3=TT().F;pan.BorderSizePixel=0;pan.Parent=gui;Instance.new("UICorner",pan).CornerRadius=UDim.new(0,14)
+top=Instance.new("Frame");top.Size=UDim2.new(1,0,0,42);top.BackgroundColor3=TT().T;top.BorderSizePixel=0;top.Parent=pan
+Instance.new("UICorner",top).CornerRadius=UDim.new(0,14)
+local ti=Instance.new("TextLabel");ti.Size=UDim2.new(1,-140,1,0);ti.Position=UDim2.new(0,12,0,0);ti.BackgroundTransparency=1
+ti.Text="👑 Michael Rodrigues montagneri";ti.TextXAlignment=Enum.TextXAlignment.Left;ti.Font=Enum.Font.GothamBold
+ti.TextSize=12;ti.TextColor3=TT().X;ti.Parent=top
+
+local function bT(txt,x,cor,cb)local b=Instance.new("TextButton");b.Size=UDim2.new(0,28,0,28);b.Position=UDim2.new(1,x,0.5,-14)
+b.Text=txt;b.Font=Enum.Font.GothamBold;b.TextSize=14;b.TextColor3=Color3.fromRGB(255,255,255);b.BackgroundColor3=TT()[cor]
+b.Parent=top;Instance.new("UICorner",b).CornerRadius=UDim.new(0,6);b.MouseButton1Click:Connect(cb)end
+bT("✕",-36,"Vm",function()sESP(false)sSpd(false)sFarm(false)sBet(false)gui:Destroy()end)
+bT("━",-70,"Bt",function()pan.Visible=false;bol.Visible=true end)
+bT("🌙",-104,"Am",function()c.Esc=not c.Esc;pan.BackgroundColor3=TT().F;top.BackgroundColor3=TT().T;ti.TextColor3=TT().X end)
+
+scr=Instance.new("ScrollingFrame");scr.Size=UDim2.new(1,-12,1,-52);scr.Position=UDim2.new(0,6,0,46)
+scr.BackgroundTransparency=1;scr.BorderSizePixel=0;scr.ScrollBarThickness=5;scr.CanvasSize=UDim2.new(0,0,0,800);scr.Parent=pan
+
+local s1=secP(scr,"🪶 MODO LEVE",5,76);tgF(s1,"Leve","Otimizado p/ celular",26,sLeve)
+local s2=secP(scr,"👁️ ESP",90,76);tgF(s2,"ESP","Mostrar animatronics",26,sESP)
+local s3=secP(scr,"⚡ SPEED",175,130);tgF(s3,"Speed","Velocidade",26,sSpd)
+local lv=Instance.new("TextLabel");lv.Size=UDim2.new(0,60,0,26);lv.Position=UDim2.new(0,8,0,96)
+lv.BackgroundTransparency=1;lv.Text="16";lv.Font=Enum.Font.GothamBold;lv.TextSize=14;lv.TextColor3=TT().X;lv.Parent=s3
+mB(s3,"−",70,95,function()c.Vel=math.max(16,c.Vel-10);lv.Text=c.Vel;if c.Spd then aSpd()end end)
+mB(s3,"+",102,95,function()c.Vel=math.min(200,c.Vel+10);lv.Text=c.Vel;if c.Spd then aSpd()end end)
+
+local s4=secP(scr,"🌾 FARM",313,76);tgF(s4,"Farm","Fugir + porta 6:00",26,sFarm)
+
+local s5=secP(scr,"🎰 APOSTAS",397,380);tgF(s5,"Bet","Auto Play",26,sBet)
+
+local lv2=Instance.new("TextLabel");lv2.Size=UDim2.new(1,-16,0,18);lv2.Position=UDim2.new(0,8,0,96);lv2.BackgroundTransparency=1
+lv2.Text="💰 VALOR";lv2.TextXAlignment=Enum.TextXAlignment.Left;lv2.Font=Enum.Font.GothamBold;lv2.TextSize=11;lv2.TextColor3=TT().S;lv2.Parent=s5
+local bV={}
+local function sV(v)c.Val=v;for k,b in pairs(bV)do b.BackgroundColor3=(k==v)and TT().A or TT().Bt end end
+local function bVF(txt,x,v)local b=Instance.new("TextButton");b.Size=UDim2.new(0,88,0,30);b.Position=UDim2.new(0,x,0,118)
+b.Text=txt;b.Font=Enum.Font.GothamBold;b.TextSize=12;b.TextColor3=Color3.fromRGB(255,255,255);b.BackgroundColor3=TT().Bt;b.Parent=s5
+Instance.new("UICorner",b).CornerRadius=UDim.new(0,6);b.MouseButton1Click:Connect(function()sV(v)end);bV[v]=b end
+bVF("💵 50",8,50);bVF("💎 250",100,250);bVF("🔥 TUDO",192,0);sV(50)
+
+local lc=Instance.new("TextLabel");lc.Size=UDim2.new(1,-16,0,18);lc.Position=UDim2.new(0,8,0,154);lc.BackgroundTransparency=1
+lc.Text="🎯 SACAR EM";lc.TextXAlignment=Enum.TextXAlignment.Left;lc.Font=Enum.Font.GothamBold;lc.TextSize=11;lc.TextColor3=TT().S;lc.Parent=s5
+local bC={}
+local function sC2(v)c.Co=v;for k,b in pairs(bC)do b.BackgroundColor3=(k==v)and TT().A or TT().Bt end end
+local function bCF(txt,x,v)local b=Instance.new("TextButton");b.Size=UDim2.new(0,136,0,30);b.Position=UDim2.new(0,x,0,176)
+b.Text=txt;b.Font=Enum.Font.GothamBold;b.TextSize=12;b.TextColor3=Color3.fromRGB(255,255,255);b.BackgroundColor3=TT().Bt;b.Parent=s5
+Instance.new("UICorner",b).CornerRadius=UDim.new(0,6);b.MouseButton1Click:Connect(function()sC2(v)end);bC[v]=b end
+bCF("🟢 2x (Seguro)",8,2);bCF("🟡 5x (Arriscado)",152,5);sC2(2)
+
+local slF=Instance.new("Frame");slF.Size=UDim2.new(1,-16,0,60);slF.Position=UDim2.new(0,8,0,214);slF.BackgroundTransparency=1;slF.Parent=s5
+tgF(slF,"SL","🛑 Stop Loss",0,function(v)c.SLO=v end)
+mB(s5,"−",8,292,function()c.SL=math.max(1,c.SL-1)end);mB(s5,"+",40,292,function()c.SL=c.SL+1 end)
+
+local swF=Instance.new("Frame");swF.Size=UDim2.new(1,-16,0,60);swF.Position=UDim2.new(0,8,0,308);swF.BackgroundTransparency=1;swF.Parent=s5
+tgF(swF,"SW","🎯 Stop Win",0,function(v)c.SWO=v end)
+mB(s5,"−",152,386,function()c.SW=math.max(1,c.SW-1)end);mB(s5,"+",184,386,function()c.SW=c.SW+1 end)
+
+local bD=Instance.new("TextButton");bD.Size=UDim2.new(1,-40,0,40);bD.Position=UDim2.new(0,20,0,745)
+bD.Text="🔴 DESATIVAR TUDO";bD.Font=Enum.Font.GothamBold;bD.TextSize=14;bD.TextColor3=Color3.fromRGB(255,255,255)
+bD.BackgroundColor3=TT().Vm;bD.Parent=scr;Instance.new("UICorner",bD).CornerRadius=UDim.new(0,8)
+bD.MouseButton1Click:Connect(function()
+sESP(false);sSpd(false);sFarm(false);sBet(false)
+c.Leve=false;c.SLO=false;c.SWO=false
+for n,t in pairs(tg)do t.s(false)end
+for _,o in ipairs(gui:GetDescendants())do if o:IsA("UIStroke")then o.Enabled=true end end
+end)
+
+local dr,st,sp
+top.InputBegan:Connect(function(i)if i.UserInputType==Enum.UserInputType.Touch or i.UserInputType==Enum.UserInputType.MouseButton1 then dr=true;st=i.Position;sp=pan.Position end end)
+top.InputEnded:Connect(function(i)if i.UserInputType==Enum.UserInputType.Touch or i.UserInputType==Enum.UserInputType.MouseButton1 then dr=false end end)
+U.InputChanged:Connect(function(i)if dr and(i.UserInputType==Enum.UserInputType.Touch or i.UserInputType==Enum.UserInputType.MouseMovement)then
+local d=i.Position-st;pan.Position=UDim2.new(sp.X.Scale,sp.X.Offset+d.X,sp.Y.Scale,sp.Y.Offset+d.Y)end end)
+end
+
+gui=Instance.new("ScreenGui");gui.Name="MichaelHub";gui.ResetOnSpawn=false;gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling;gui.Parent=P.PlayerGui
+cP();cB()
+print("👑 MICHAEL RODRIGUES MONTAGNERI CARREGADO!")
